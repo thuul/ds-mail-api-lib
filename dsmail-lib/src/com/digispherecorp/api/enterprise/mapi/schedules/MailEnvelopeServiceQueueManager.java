@@ -25,16 +25,20 @@ public class MailEnvelopeServiceQueueManager implements IEnvelopeServiceQueueMan
     private MailEnvelopeServiceQueueManager() {
         super();
         keepAlive = true;
-        mails = MailEngine.getInstance(null);
+        mails = MailEngine.getInstance();
         envelopeQueue = mails.getEnvelopeQueue();
     }
 
-    public static MailEnvelopeServiceQueueManager getInstance() {
+    public static MailEnvelopeServiceQueueManager newInstance() {
         synchronized (MailEnvelopeServiceQueueManager.class) {
             if (instance == null) {
                 instance = new MailEnvelopeServiceQueueManager();
             }
         }
+        return instance;
+    }
+
+    public static MailEnvelopeServiceQueueManager getInstance() {
         return instance;
     }
 

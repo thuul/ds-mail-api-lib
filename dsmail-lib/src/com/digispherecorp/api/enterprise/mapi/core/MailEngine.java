@@ -52,18 +52,20 @@ public class MailEngine {
         this.session = Session.getInstance(properties, null);
     }
 
-    public static MailEngine getInstance(AbstractIMAPMailProfile profile) {
-        if (instance == null) {
-            synchronized (MailEngine.class) {
-                if (instance == null) {
-                    if (profile != null) {
-                        instance = new MailEngine(profile);
-                    } else {
-                        instance = new MailEngine();
-                    }
+    public static MailEngine newInstance(AbstractIMAPMailProfile profile) {
+        synchronized (MailEngine.class) {
+            if (instance == null) {
+                if (profile != null) {
+                    instance = new MailEngine(profile);
+                } else {
+                    instance = new MailEngine();
                 }
             }
         }
+        return instance;
+    }
+
+    public static MailEngine getInstance() {
         return instance;
     }
 
