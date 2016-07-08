@@ -7,4 +7,4 @@ MailEnginePluginHook.releasePluginHook shuts down the scheduler
 
 The project depends on   
 1. Oracle Java mail.jar  
-2. reusable-object-pool-impl (download and build) 
+2. reusable-object-pool-impl.jar (download and build) 
