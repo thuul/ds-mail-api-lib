@@ -40,7 +40,8 @@ public abstract class AbstractIMAPMailProfile extends AbstractMailProfile {
      * @param debug
      * @param storeCopy
      */
-    public AbstractIMAPMailProfile(String mailFrom, String sentTo, String username, String password, String host, int port, String transport, String store, String imapUser, String imapPassword, String imapHost, int imapPort, boolean debug, boolean storeCopy) {
+    public AbstractIMAPMailProfile(String mailFrom, String sentTo, String username, String password, String host, int port,
+            String transport, String store, String imapUser, String imapPassword, String imapHost, int imapPort, boolean debug, boolean storeCopy) {
         super(mailFrom, sentTo, username, password, host, port, transport, store, debug);
         this.imapUser = imapUser;
         this.imapPassword = imapPassword;

@@ -26,7 +26,6 @@ public class MailEnvelopeTaskScheduler implements IRunnableTaskSchedulerService 
 
     private static volatile MailEnvelopeTaskScheduler instance;
     private ScheduledExecutorService scheduler;
-    private final ScheduledExecutorService schedulerMon;
     private ScheduledFuture<?> runnableScheduledFuture;
     private ScheduledFuture<?> monitorRunnableScheduledFuture;
     private Runnable runnableProcess;
@@ -34,7 +33,6 @@ public class MailEnvelopeTaskScheduler implements IRunnableTaskSchedulerService 
 
     private MailEnvelopeTaskScheduler() {
         this.scheduler = Executors.newSingleThreadScheduledExecutor(new SimpleDeamonThreadFactory());
-        this.schedulerMon = Executors.newSingleThreadScheduledExecutor(new SimpleDeamonThreadFactory());
     }
 
     private MailEnvelopeTaskScheduler(AbstractIMAPMailProfile profile) {
@@ -64,17 +62,6 @@ public class MailEnvelopeTaskScheduler implements IRunnableTaskSchedulerService 
             MailEnvelopeServiceQueueManager.getInstance().consumeService();
 
         }, 10, TimeUnit.SECONDS);
-
-        this.schedulerMon.scheduleWithFixedDelay(() -> {
-            if (!checkIfTaskRunning()) {
-                runnableScheduledFuture = scheduler.schedule(() -> {
-
-                    Logger.getLogger(MailEnvelopeTaskScheduler.class.getName()).info("envelope scheduler stopped, restarting scheduler....");
-                    MailEnvelopeServiceQueueManager.getInstance().consumeService();
-
-                }, 10, TimeUnit.SECONDS);
-            }
-        }, 15, 300, TimeUnit.SECONDS);
     }
 
     @Override
@@ -125,25 +112,9 @@ public class MailEnvelopeTaskScheduler implements IRunnableTaskSchedulerService 
     @Override
     public boolean cancelRunningTask() {
         if (checkIfTaskRunning()) {
-
-            MailEnvelopeServiceQueueManager.getInstance().shutdown();
             runnableScheduledFuture.cancel(true);
-
         }
-        schedulerMon.shutdown();
-        try {
-            if (schedulerMon.awaitTermination(60, TimeUnit.SECONDS)) {
-                schedulerMon.shutdownNow();
-                if (!schedulerMon.awaitTermination(60, TimeUnit.SECONDS)) {
-                    Logger.getLogger(MailEnvelopeTaskScheduler.class.getName()).info("Executor Service did not terminate");
-                }
-            }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MailEnvelopeTaskScheduler.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
-            schedulerMon.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-
+        MailEnvelopeServiceQueueManager.getInstance().shutdown();
         scheduler.shutdown();
         try {
             if (scheduler.awaitTermination(60, TimeUnit.SECONDS)) {

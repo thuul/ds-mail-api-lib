@@ -4,9 +4,9 @@
  */
 package com.digispherecorp.api.enterprise.mapi.schedules;
 
-import com.digispherecorp.api.enterprise.mapi.abs.IEnvelopeServiceQueueManager;
 import com.digispherecorp.api.enterprise.mapi.core.MailEngine;
 import com.digispherecorp.api.enterprise.mapi.core.MailMessage;
+import com.digispherecorp.api.reusable.pool.queue.IQueueManager;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author Wal
  */
-public class MailEnvelopeServiceQueueManager implements IEnvelopeServiceQueueManager {
+public class MailEnvelopeServiceQueueManager implements IQueueManager {
 
     private boolean keepAlive;
     private BlockingQueue<MailMessage> envelopeQueue;
@@ -57,14 +57,13 @@ public class MailEnvelopeServiceQueueManager implements IEnvelopeServiceQueueMan
     }
 
     @Override
-    public boolean shutdown() {
+    public void shutdown() {
         synchronized (MailEnvelopeServiceQueueManager.class) {
             if (keepAlive) {
                 keepAlive = false;
             }
             envelopeQueue.clear();
             envelopeQueue = null;
-            return true;
         }
     }
 }

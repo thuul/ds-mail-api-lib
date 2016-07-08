@@ -42,7 +42,20 @@ public class FileBasedEnvelopeProfile extends AbstractIMAPMailProfile {
         } catch (IOException ex) {
             Logger.getLogger(FileBasedEnvelopeProfile.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         }
-        //get property value and set profile init value
+        setMailFrom(properties.getProperty("mailFrom"));
+        setSentTo(properties.getProperty("sentTo"));
+        setUsername(properties.getProperty("username"));
+        setPassword(properties.getProperty("password"));
+        setHost(properties.getProperty("host"));
+        setPort(Integer.valueOf(properties.getProperty("port")));
+        setTransport(properties.getProperty("transport"));
+        setStore(properties.getProperty("store"));
+        setImapUser(properties.getProperty("imapUser"));
+        setImapPassword(properties.getProperty("imapPassword"));
+        setImapHost(properties.getProperty("imapHost"));
+        setImapPort(Integer.valueOf(properties.getProperty("imapPort")));
+        setDebug(Boolean.valueOf(properties.getProperty("debug")));
+        setStoreCopy(Boolean.valueOf(properties.getProperty("storeCopy")));
     }
 
     @Override
