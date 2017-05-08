@@ -14,7 +14,7 @@ import com.digispherecorp.api.enterprise.mapi.schedules.MailEnvelopeTaskSchedule
  */
 public class MailEnginePluginHook {
 
-    private static volatile MailEnginePluginHook instance = new MailEnginePluginHook();
+    private static final MailEnginePluginHook instance = new MailEnginePluginHook();
 
     private MailEnginePluginHook() {
     }
